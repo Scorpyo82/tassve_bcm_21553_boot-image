@@ -1,7 +1,7 @@
 on post-fs
 
 # permissions for system server and daemons (accelerometer & magnetic & proximity)
-    mkdir /data/misc/sensors 0775 system misc
+    mkdir /data/misc/sensors 0777 system misc
 
     chown root system /dev/mmc328x
     chown root system /dev/ecompass_ctrl
@@ -27,19 +27,20 @@ on boot
     chown system system /sys/class/backlight/aat1401-backlight/brightness
     chown system system /sys/class/backlight/pwm-keypad-backlight.0/brightness
 
-    chmod 0777 /dev/bcm_kril
-    chmod 0777 /dev/bcm_vsp
+    chmod 0660 /dev/bcm_kril
+    chown root radio /dev/bcm_kril
+    chmod 0660 /dev/bcm_vsp
     chmod 0660 /dev/bcm_atc
     chown system system /dev/bcm_kpdp
     chown shell system /dev/bcm_atc
     chmod 0660 /dev/bcm_alsa_voip
     chown radio system /dev/bcm_alsa_voip
 	chmod 0666 /dev/v3d
-    insmod /system/lib/modules/memalloc.ko
+#    insmod /system/lib/modules/memalloc.ko
     insmod /system/lib/modules/hx170dec.ko
     insmod /system/lib/modules/h6270enc.ko
 	insmod /system/lib/modules/gememalloc.ko    
-	insmod /system/lib/modules/ge_drv.ko   
+#	insmod /system/lib/modules/ge_drv.ko   
     insmod /system/lib/modules/brcm_switch.ko
     insmod /system/lib/modules/bcm_headsetsw.ko
     chmod 0777 /dev/camera
@@ -55,10 +56,10 @@ on boot
     mkdir /data/brcm/ase
     mkdir /data/brcm/ase/extras
     mkdir /data/brcm/ase/scripts
-    chmod 0775 /data/brcm
-    chmod 0775 /data/brcm/ase
-    chmod 0775 /data/brcm/ase/extras
-    chmod 0775 /data/brcm/ase/scripts
+    chmod 0777 /data/brcm
+    chmod 0777 /data/brcm/ase
+    chmod 0777 /data/brcm/ase/extras
+    chmod 0777 /data/brcm/ase/scripts
     copy /system/etc/adb.sh /data/brcm/ase/scripts/adb.sh
     copy /system/etc/rndis.sh /data/brcm/ase/scripts/rndis.sh
     copy /system/etc/logcfg.sh /data/brcm/ase/scripts/logcfg.sh
@@ -66,12 +67,12 @@ on boot
     copy /system/etc/atmode.sh /data/brcm/ase/scripts/atmode.sh
     copy /system/etc/usbconfig.sh /data/brcm/ase/scripts/usbconfig.sh
 
-    chmod 0775 /data/brcm/ase/scripts/adb.sh
-    chmod 0775 /data/brcm/ase/scripts/rndis.sh
-    chmod 0775 /data/brcm/ase/scripts/logcfg.sh
-    chmod 0775 /data/brcm/ase/scripts/modem.sh
-    chmod 0775 /data/brcm/ase/scripts/atmode.sh
-    chmod 0775 /data/brcm/ase/scripts/usbconfig.sh
+    chmod 0777 /data/brcm/ase/scripts/adb.sh
+    chmod 0777 /data/brcm/ase/scripts/rndis.sh
+    chmod 0777 /data/brcm/ase/scripts/logcfg.sh
+    chmod 0777 /data/brcm/ase/scripts/modem.sh
+    chmod 0777 /data/brcm/ase/scripts/atmode.sh
+    chmod 0777 /data/brcm/ase/scripts/usbconfig.sh
 
 # for kexec
     chmod 755 /system/bin/kexec
@@ -79,7 +80,7 @@ on boot
     chmod 0777 /data/kexec.sh
 
 #runSysCmd
-    mkdir /data/misc/utils 0775
+    mkdir /data/misc/utils 0777
 
 #permisssion for cacheops
 	chmod 0666 /dev/cache-ops 
@@ -164,21 +165,21 @@ on boot
     chown gps system /dev/bcm_cntin
 
 #for VT config
-    mkdir /data/vt 0775
-    chmod 0775 /system/etc/vt/3g324mConfig.val
-    chmod 0775 /system/etc/vt/testplay.3gp
-    chmod 0775 /system/etc/vt/testplay.jpg
-    chmod 0775 /system/etc/vt/testplay.bmp
+    mkdir /data/vt 0777
+    chmod 0777 /system/etc/vt/3g324mConfig.val
+    chmod 0777 /system/etc/vt/testplay.3gp
+    chmod 0777 /system/etc/vt/testplay.jpg
+    chmod 0777 /system/etc/vt/testplay.bmp
     copy /system/etc/vt/3g324mConfig.val /data/vt/3g324mConfig.val
     copy /system/etc/vt/testplay.3gp /data/vt/testplay.3gp
     copy /system/etc/vt/testplay.jpg /data/vt/testplay.jpg
     copy /system/etc/vt/testplay.bmp /data/vt/testplay.bmp
-    chmod 0775 /data/vt/3g324mConfig.val
-    chmod 0775 /data/vt/testplay.3gp
-    chmod 0775 /data/vt/testplay.jpg
-    chmod 0775 /data/vt/testplay.bmp
-    chmod 0775 /mnt/sdcard/vt
-    chmod 0777 /dev/pmem_adsp
+    chmod 0777 /data/vt/3g324mConfig.val
+    chmod 0777 /data/vt/testplay.3gp
+    chmod 0777 /data/vt/testplay.jpg
+    chmod 0777 /data/vt/testplay.bmp
+    chmod 0777 /mnt/sdcard/vt
+#    chmod 0777 /dev/pmem_adsp
 
     # Use misc partition for flash OTP access
     chown root radio /dev/mtd/mtd9
@@ -219,7 +220,7 @@ service bluetoothd /system/bin/logwrapper /system/bin/bluetoothd -d -n
 #	disabled
 #	oneshot
 
-service wpa_supplicant /system/bin/wpa_supplicant -Dwext -ieth0 -c /data/misc/wifi/wpa_supplicant.conf
+service wpa_supplicant /system/bin/wpa_supplicant -dd -Dwext -ieth0 -c /data/misc/wifi/wpa_supplicant.conf
 	socket eth0 dgram 775 wifi wifi
 	disabled
 	oneshot
@@ -237,6 +238,8 @@ service mfgloader /system/bin/mfgloader
     oneshot
 
 service wlandutservice /system/bin/wlandutservice
+    user system
+    group wifi net_raw net_admin system inet
     disabled
     oneshot
 
@@ -252,7 +255,7 @@ service kexec /data/kexec.sh
 service console /system/bin/usb_portd
 	console
         user system
-        group vpn net_admin net_raw radio system log mount sdcard_rw
+        group vpn net_admin net_raw radio system log mount
         oneshot
 
 #start memsicd service
@@ -261,5 +264,4 @@ service memsicd /system/bin/memsicd
     group system    
     oneshot
 
-#ringtones
-chmod 0775 /system/media/audio/ringtones
+

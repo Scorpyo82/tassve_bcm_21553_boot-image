@@ -1,0 +1,65 @@
+Kernel Cerecilla + recócery CWM
+Versión 0.5_fix1
+Creado por <Miguel Ponce Torres>
+Alias Scorpyo82
+
+Lista de cambios:
+
+V 0.5_fix1:
+	- Soporte para usar multi-recovery
+--------------------------------------
+
+V 0.5:
+	- Kernel comprimido en lzma
+	- Añadido soporte para ramdisk en lzma
+
+--------------------------------------
+
+V 0.4_fix1:
+	- Corregido la carga de módulos rfs
+	- Binario adb sustituido
+	- El kernel no se ha alterado, solo los scripts que se ejecutan durante el arranque.
+
+--------------------------------------
+
+V 0.4:
+	- Perdida de DNS y estabilidad de Wifi corregidos.
+	- Recovery mejorado.
+	- Mayor cantidad de governadores de CPU (17)
+	- Mayor núnero de planificadores de entrada/salida (5)
+	- Desbloqueado el boot.img durante el recovery
+	- Posibilidad de hacer backup de boot.img (desactivado)
+	- Soporte para usar ADB estando dentro del recovery.
+	- ADB habilitado durante el recovery
+
+--------------------------------------
+
+V 0.3_fix2:
+	- Corregido problema para restaruar copia de seguridad de forma automática
+	- Añadido binario para desbloquear la partición del boot (precaución de uso)
+	- Sustituido el script fix_permissions, ahora funciona mejor que nunca.
+
+--------------------------------------
+
+V 0.3_fix1:
+	- Añadido soporte para sd_ext (partición para datos)
+
+--------------------------------------
+
+V 0.3:
+	- Corregido problemas con governadores
+
+--------------------------------------
+
+V 0.2:
+	- Soporta ext4
+
+--------------------------------------
+
+Características generales:
+Esta imagen boot, es totalmente idependiente en la forma de recovery
+ya que no nececita ningún comando de sistema para funcionar.
+Todos los comandos soportados están dentro de su systema de binarios.
+Además, están enlazados a bussybox de manera interna, con lo que no hay
+que generar updaters-script con la molestia de llamar a bussybox antes del comando.
+
