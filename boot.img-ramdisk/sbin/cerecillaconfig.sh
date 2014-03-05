@@ -357,8 +357,6 @@ else
 	/sbin/busybox mount -t rfs -o nosuid,nodev,check=no $DATA_NAND /data
 fi
 
-# Se crea el archivo temporal "continue_init", pues el init.rc lo está esperando para continuar la carga.
-touch /tmp/continue_init
 /sbin/busybox mount -o remount,ro /system
 /sbin/busybox mount -o remount,ro /
 
