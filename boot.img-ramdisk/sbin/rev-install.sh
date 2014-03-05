@@ -17,7 +17,7 @@
 /sbin/busybox mkdir /sd-ext
 
 # symlinking some file
-/sbin/busybox ln -s /res/recovery.fstab /etc/recovery.fstab
+#/sbin/busybox ln -s /res/recovery.fstab /etc/recovery.fstab
 
 
 # Unlock BML partition
@@ -205,24 +205,70 @@
 /sbin/busybox ln -s /sbin/busybox /sbin/zcat
 
 
+#/sbin/busybox rm /cache/recovery/command
+#/sbin/busybox rm /cache/update.zip
+#/sbin/busybox touch /tmp/.ignorebootmessage
 
 
-########### Mod Cerecilla ############ 
-
-mount -t rfs -o rw,nosuid,nodev /dev/block/stl10 /cache
-
-## Decisión de recovery a utilizar
+########### Mod Cerecilla ############
 
 PATH_RECOVERY_OLD="/system/bin/recovery-old"
 LOG="/recovery_load.log"
 KEY="/cache/recovery/load-recovery-old"
 
 date > $LOG
-echo "Información durante la inicialización del recovery con el mod cerecilla:" >> $LOG
+
+## Elección de la correcta tabla de particiones  ##
+
+PATH_CONFIG="/system/cerecillaconfig.ini"
+busybox mount -t rfs -o remount,rw /dev/block/stl9 /system
+
+echo "Información durante la inicialización del recovery con el mod cerecilla..." >> $LOG
+
+## Se comprueba si existe el archivo /cerecillaconfig.ini
+	
+echo "Buscando archivo de configuración para el cerecillamod.sh ..." >> $LOG
+if [ -e $PATH_CONFIG ]
+then
+
+	source $PATH_CONFIG
+	echo "Archivo de configuración de cerecillamod.sh encontrado" >> $LOG
+		# Comprobamos si "data2ext" está habilidatdo dentro del archivo de configuración
+	if [ "$last_path_data" == "sdext2" ]
+	then
+
+		echo "Utilizando el archivo de montajes fstab.recovery.expasión..." >> $LOG
+		ln -s /cerecilla.mod/recovery.fstab.expansion/recovery.fstab /etc/
+
+	else
+
+		echo "Utilizando el archivo de montajes fstab.recovery clásico..." >> $LOG
+		ln -s /cerecilla.mod/recovery.fstab.native/recovery.fstab /etc/
+
+	fi
+
+else
+
+	echo "Archivo no encontrado..." >> $LOG
+	echo "Utilizando el archivo de montajes fstab.recovery clásico..." >> $LOG
+	ln -s /cerecilla.mod/recovery.fstab.native/recovery.fstab /etc/
+
+fi
+
+
+## Fin de decisión de tabla de particiones a utilizar ##
+
+
+## Decisión de recovery a utilizar
+
+mount -t rfs -o rw,nosuid,nodev /dev/block/stl10 /cache
+
+echo ""
+echo "Averiguando que recovery hay que utilizar...." >> $LOG
 
 
 # Comprobamos si existe el arhivo "load-recovery-old" dentro de la carpeta /var/cache
-echo "Buscando archivo de configuración para el arranque......." >> $LOG
+echo "Buscando archivo (gatillo)...." >> $LOG
 if [ -e $KEY ]
 then
 	rm  $KEY
@@ -257,10 +303,6 @@ else
 fi
 
 ############ Fin mod Cerecilla ############ 
-
-#/sbin/busybox rm /cache/recovery/command
-#/sbin/busybox rm /cache/update.zip
-#/sbin/busybox touch /tmp/.ignorebootmessage
 
 setprop rev-install.ready 1 
 
