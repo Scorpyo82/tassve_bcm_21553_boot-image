@@ -1,9 +1,16 @@
 Kernel Cerecilla + recócery CWM
-Versión 0.5_fix1
+Versión 0.5_fix2
 Creado por <Miguel Ponce Torres>
 Alias Scorpyo82
 
 Lista de cambios:
+
+V 0.5_fix2:
+	- Soporte data2SD
+	- Ahora se decide durante el arranque el distino de /data según la configuración obtenida por el usuario.
+	- Ahora se decide durante el arranque el distino de /data/dalvik-cache según la configuración obtenida por el usuario.
+
+--------------------------------------
 
 V 0.5_fix1:
 	- Soporte para usar multi-recovery
