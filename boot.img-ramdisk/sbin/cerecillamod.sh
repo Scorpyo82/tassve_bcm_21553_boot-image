@@ -48,7 +48,7 @@ date > $LOG
 ## FUNCIONES:
 
 function LOAD_CONFIG(){
-## Función que comprueba si existe el archivo /cerecillaconfig.ini
+## Función que comprueba si existe el archivo "cerecillaconfig.ini"
 	
 	echo "Buscando archivo de configuración para el kernel..." | tee -a $LOG
 	if [ ! -e $PATH_CONFIG ]
@@ -205,7 +205,8 @@ function DATA_TO_SDEXT2(){
 	echo "" | tee -a $LOG
 	echo "Datos del Scan:" | tee -a $LOG
 	echo "" | tee -a $LOG
-	/sbin/e2fsck -f -p -t -t -v /dev/block/mmcblk0p2 | tee -a $LOG
+	#/sbin/e2fsck -f -p -t -t -v /dev/block/mmcblk0p2 | tee -a $LOG
+	echo "Escán saltado desde el código...." | tee -a $LOG
 	echo "Terminado" | tee -a $LOG
 	echo "" | tee -a $LOG
 	echo "Montando partición de la tarjeta como /data/" | tee -a $LOG
@@ -224,6 +225,13 @@ function DATA_TO_SDEXT2(){
 		cp -Rpf /data-nand/* /data/
 		sync
 		/sbin/busybox umount /data-nand
+	fi
+
+	## Establecer el tamaño de cache de la SD
+
+	if [ -e $SD_CACHE ]
+	then
+		echo "2048" > $SD_CACHE
 	fi
 
 	# Además, corregimos el valor de "last_type_mount_sdext2" para darle el valor de "data" (dejamos el valor "last_type_mount_datanand" sin modificar)
@@ -306,7 +314,7 @@ then
 
 		# Comprobamos si "format_sdext2" está habilitado dentro del archivo de configuración
 		# O si la partición externa se estuvo usando de forma nativa, pues entonces habría que borrarla
-		if [ "$format_sdext2" == "true" ] || [ $last_type_mount_sdext2=native ]
+		if [ "$format_sdext2" == "true" ] || [ "$last_type_mount_sdext2" = "native" ]
 		then
 
 			# Esto significa que la partición externa se debe formatear por dos razones, la 1ª porque el usuario lo pida, la 2ª porque
@@ -321,7 +329,7 @@ then
 		if [ "$dalvik2nand" == "true" ]
 		then
 			# Comprobamos si hay que limpiar la partición NAND o si ha estado sucia por estar montada nativamente
-			if [ "$format_data_nand" == "true" ]
+			if [ "$format_datanand" == "true" ]
 			then
 				FORMAT_DATA_NAND
 			fi
@@ -357,10 +365,12 @@ else
 	/sbin/busybox mount -t rfs -o nosuid,nodev,check=no $DATA_NAND /data
 fi
 
+
+
+echo "Ejecutando disparador: setprop cerecillamod.ready 1" | tee -a $LOG
 /sbin/busybox mount -o remount,ro /system
 /sbin/busybox mount -o remount,ro /
-
-setprop cerecillaconfig.service ready
+setprop cerecillamod.ready 1
 
 	####################### FUNCIONES NO USADAS PERO DE PROVECHO PARA FUTURAS MEJORAS #######################
 	####################### --------------------------------------------------------- #######################
